@@ -44,7 +44,7 @@ public class ProductsController : BaseApiController
     public async Task<ActionResult<ProductDto>> GetProduct(int id)
     {
         var product = await _productRepository.GetEntityWithSpec(new ProductWithTypeAndBrandSpecification(id));
-        if (product == null) return NotFound(new ApiResponse(404));
+        if (product == null) return BadRequest(new ApiResponse(404));
         return Ok(_mapper.Map<Product, ProductDto>(product));
     }
 
