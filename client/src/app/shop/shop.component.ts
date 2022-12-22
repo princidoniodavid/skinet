@@ -11,7 +11,7 @@ import {ShopParams} from "../shared/models/shop-params";
   styleUrls: ['./shop.component.scss']
 })
 export class ShopComponent implements OnInit {
-  @ViewChild('search', {static: true}) searchTerm: ElementRef;
+  @ViewChild('search', {static: false}) searchTerm: ElementRef;
   products: IProduct[] = [];
   brands: IBrand[] = [];
   types: IType[] = [];
@@ -84,7 +84,6 @@ export class ShopComponent implements OnInit {
   }
 
   onSearch() {
-    console.log(this.searchTerm);
     this.shopParams.search = this.searchTerm.nativeElement.value;
     this.shopParams.pageNumber = 1;
     this.getProducts();
