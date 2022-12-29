@@ -2,6 +2,7 @@ using API.Extensions;
 using API.Helpers;
 using API.Middleware;
 using Infrastructure.Data;
+using Infrastructure.Identity;
 using Microsoft.EntityFrameworkCore;
 using StackExchange.Redis;
 
@@ -24,6 +25,8 @@ public class Startup
         services.AddControllers();
         services.AddDbContext<StoreContext>(x =>
             x.UseSqlServer(_configuration.GetConnectionString("DefaultConnection")));
+        services.AddDbContext<AppIdentityDbContext>(x =>
+            x.UseSqlServer(_configuration.GetConnectionString("IdentityConnection")));
         services.AddSingleton<IConnectionMultiplexer>(c =>
         {
             var config = ConfigurationOptions.Parse(_configuration
@@ -31,6 +34,7 @@ public class Startup
             return ConnectionMultiplexer.Connect(config);
         });
         services.AddApplicationServices();
+        services.AddIdentityServices(_configuration);
         services.AddSwaggerDocumentation();
         services.AddCors(opt =>
         {
@@ -50,6 +54,7 @@ public class Startup
         app.UseRouting();
         app.UseStaticFiles();
         app.UseCors("CorsPolicy");
+        app.UseAuthentication();
         app.UseAuthorization();
         app.UseSwaggerDocumentation();
         app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
