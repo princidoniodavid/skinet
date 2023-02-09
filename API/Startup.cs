@@ -23,17 +23,7 @@ public class Startup
     {
         services.AddAutoMapper(typeof(MappingProfiles));
         services.AddControllers();
-        services.AddDbContext<StoreContext>(x =>
-            x.UseSqlServer(_configuration.GetConnectionString("DefaultConnection")));
-        services.AddDbContext<AppIdentityDbContext>(x =>
-            x.UseSqlServer(_configuration.GetConnectionString("IdentityConnection")));
-        services.AddSingleton<IConnectionMultiplexer>(c =>
-        {
-            var config = ConfigurationOptions.Parse(_configuration
-                .GetConnectionString("Redis"), true);
-            return ConnectionMultiplexer.Connect(config);
-        });
-        services.AddApplicationServices();
+        services.AddApplicationServices(_configuration);
         services.AddIdentityServices(_configuration);
         services.AddSwaggerDocumentation();
         services.AddCors(opt =>
